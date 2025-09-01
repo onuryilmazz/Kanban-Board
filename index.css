@@ -401,8 +401,9 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   padding: 4px;
+  padding-bottom: 12px;
   margin: 0 -4px;
-  min-height: 100px;
+  min-height: 150px;
 }
 
 /* --- Card Styles --- */
