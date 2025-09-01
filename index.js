@@ -4,6 +4,9 @@
  */
 import { GoogleGenAI, Type } from 'https://esm.sh/@google/genai@^0.14.0';
 
+// Safely access the API key, will be undefined in browser environments without a build step
+const API_KEY = typeof process !== 'undefined' && process.env ? process.env.API_KEY : undefined;
+
 // --- STATE ---
 let columns = [];
 let draggedItem = null; // Can be { type: 'card', ... } or { type: 'column', ... }
@@ -65,7 +68,7 @@ const fetchAndDisplayFunFact = async (themeName) => {
     const funFactContainer = document.querySelector('.fun-fact-container');
     if (!funFactContainer) return;
 
-    if (!process.env.API_KEY) {
+    if (!API_KEY) {
         funFactContainer.style.display = 'none';
         return;
     }
@@ -79,7 +82,7 @@ const fetchAndDisplayFunFact = async (themeName) => {
     funFactEl.title = '';
 
     try {
-        const ai = new GoogleGenAI({apiKey: process.env.API_KEY});
+        const ai = new GoogleGenAI({apiKey: API_KEY});
         const prompt = themeName === 'Default'
             ? 'Tell me a very short, concise, and funny fun fact about productivity or Kanban boards. Keep it to one sentence.'
             : `Tell me a very short, concise, and funny fun fact about the country ${themeName}. Keep it to one sentence.`;
@@ -949,10 +952,10 @@ const initializeApp = async () => {
   }
 
   try {
-    if (!process.env.API_KEY) {
+    if (!API_KEY) {
       throw new Error("API_KEY not found.");
     }
-    const ai = new GoogleGenAI({apiKey: process.env.API_KEY});
+    const ai = new GoogleGenAI({apiKey: API_KEY});
 
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
