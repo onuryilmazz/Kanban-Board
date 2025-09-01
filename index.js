@@ -62,8 +62,18 @@ const generateId = () => `id_${Date.now()}_${Math.random().toString(36).substrin
 
 // --- AI FUN FACT ---
 const fetchAndDisplayFunFact = async (themeName) => {
-    const funFactEl = document.querySelector('.fun-fact-content');
+    const funFactContainer = document.querySelector('.fun-fact-container');
+    if (!funFactContainer) return;
+
+    if (!process.env.API_KEY) {
+        funFactContainer.style.display = 'none';
+        return;
+    }
+    
+    funFactContainer.style.display = 'flex';
+    const funFactEl = funFactContainer.querySelector('.fun-fact-content');
     if (!funFactEl) return;
+
 
     funFactEl.textContent = 'Loading...';
     funFactEl.title = '';
@@ -939,6 +949,9 @@ const initializeApp = async () => {
   }
 
   try {
+    if (!process.env.API_KEY) {
+      throw new Error("API_KEY not found.");
+    }
     const ai = new GoogleGenAI({apiKey: process.env.API_KEY});
 
     const response = await ai.models.generateContent({
