@@ -829,17 +829,6 @@ const createBoardHeader = () => {
     description.textContent = 'Organize and track your work';
     textDiv.append(title, description);
     titleGroup.append(icon, textDiv);
-
-    // Center: Fun Fact
-    const funFactContainer = document.createElement('div');
-    funFactContainer.className = 'fun-fact-container';
-    const funFactTitle = document.createElement('p');
-    funFactTitle.className = 'fun-fact-title';
-    funFactTitle.innerHTML = 'Fun Fact 🙂';
-    const funFactContent = document.createElement('p');
-    funFactContent.className = 'fun-fact-content';
-    funFactContent.textContent = ''; // Will be populated by fetchAndDisplayFunFact
-    funFactContainer.append(funFactTitle, funFactContent);
     
     // Right Panel: Actions + User Profile
     const rightPanel = document.createElement('div');
@@ -910,7 +899,23 @@ const createBoardHeader = () => {
     
     rightPanel.append(addButton, userProfile);
 
-    header.append(titleGroup, funFactContainer, rightPanel);
+    header.append(titleGroup);
+
+    // Center: Fun Fact (only if API key is available)
+    if (API_KEY) {
+        const funFactContainer = document.createElement('div');
+        funFactContainer.className = 'fun-fact-container';
+        const funFactTitle = document.createElement('p');
+        funFactTitle.className = 'fun-fact-title';
+        funFactTitle.innerHTML = 'Fun Fact 🙂';
+        const funFactContent = document.createElement('p');
+        funFactContent.className = 'fun-fact-content';
+        funFactContent.textContent = ''; // Will be populated by fetchAndDisplayFunFact
+        funFactContainer.append(funFactTitle, funFactContent);
+        header.append(funFactContainer);
+    }
+
+    header.append(rightPanel);
     return header;
 };
 
@@ -1010,14 +1015,6 @@ const initializeApp = async () => {
     }));
       
     renderApp();
-    
-    const descriptionEl = document.getElementById('board-description');
-    if (descriptionEl) {
-        descriptionEl.textContent = 'Could not generate board with AI. Using sample data.';
-        descriptionEl.style.color = '#bf2600'; // Warning color
-        descriptionEl.style.fontWeight = '500';
-    }
-    
     fetchAndDisplayFunFact(userData.theme);
   }
 };
