@@ -825,6 +825,7 @@ const createBoardHeader = () => {
     const title = document.createElement('h1');
     title.textContent = 'Kanban Board';
     const description = document.createElement('p');
+    description.id = 'board-description';
     description.textContent = 'Organize and track your work';
     textDiv.append(title, description);
     titleGroup.append(icon, textDiv);
@@ -915,16 +916,8 @@ const createBoardHeader = () => {
 
 
 // --- RENDER & INITIALIZATION ---
-const renderApp = (error = null) => {
+const renderApp = () => {
     appContainer.innerHTML = '';
-
-    if (error) {
-        const errorEl = document.createElement('div');
-        errorEl.className = 'loading-container';
-        errorEl.textContent = error;
-        appContainer.appendChild(errorEl);
-        return;
-    }
     
     const header = createBoardHeader();
     const board = renderBoard();
@@ -953,7 +946,7 @@ const initializeApp = async () => {
 
   try {
     if (!API_KEY) {
-      throw new Error("API_KEY not found.");
+      throw new Error("API_KEY not found. Using sample data.");
     }
     const ai = new GoogleGenAI({apiKey: API_KEY});
 
@@ -1015,7 +1008,16 @@ const initializeApp = async () => {
         ...col,
         color: COLOR_PALETTE[index % COLOR_PALETTE.length]
     }));
-    renderApp("Could not generate board from AI. Using sample data.");
+      
+    renderApp();
+    
+    const descriptionEl = document.getElementById('board-description');
+    if (descriptionEl) {
+        descriptionEl.textContent = 'Could not generate board with AI. Using sample data.';
+        descriptionEl.style.color = '#bf2600'; // Warning color
+        descriptionEl.style.fontWeight = '500';
+    }
+    
     fetchAndDisplayFunFact(userData.theme);
   }
 };
