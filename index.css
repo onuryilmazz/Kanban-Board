@@ -401,7 +401,7 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   padding: 4px;
-  padding-bottom: 12px;
+  padding-bottom: 160px;
   margin: 0 -4px;
   min-height: 150px;
 }
