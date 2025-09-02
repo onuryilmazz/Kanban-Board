@@ -642,7 +642,7 @@ const createColumnElement = (column, columnIndex) => {
     input.value = title.textContent;
     input.maxLength = 50;
 
-    let hasRestored = false; // Flag to prevent double execution from blur and keydown
+    let hasRestored = false; // Flag to prevent double execution
 
     const restoreTitle = (shouldSave) => {
       if (hasRestored) return;
@@ -943,7 +943,50 @@ const renderBoard = () => {
     return boardEl;
 };
 
+const createWelcomeModal = () => {
+    return new Promise(resolve => {
+        const overlay = document.createElement('div');
+        overlay.className = 'heart-modal-overlay';
+        
+        const modalContent = document.createElement('div');
+        modalContent.className = 'heart-modal-content';
+
+        const heart = document.createElement('div');
+        heart.className = 'heart-shape';
+
+        const text = document.createElement('div');
+        text.className = 'heart-modal-text';
+        text.textContent = 'I LOVE YOU DAMLA';
+        
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'heart-modal-close-btn';
+        closeBtn.textContent = 'Continue to Board';
+
+        const closeModal = () => {
+            overlay.style.opacity = '0';
+            overlay.style.transition = 'opacity 0.3s ease';
+            setTimeout(() => {
+                overlay.remove();
+                resolve();
+            }, 300);
+        };
+
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                closeModal();
+            }
+        });
+        closeBtn.addEventListener('click', closeModal);
+        
+        heart.appendChild(text);
+        modalContent.append(heart, closeBtn);
+        overlay.appendChild(modalContent);
+        document.body.appendChild(overlay);
+    });
+};
+
 const initializeApp = async () => {
+  await createWelcomeModal();
   loadUserData();
   if (userData.theme && THEMES[userData.theme]) {
       COLOR_PALETTE = THEMES[userData.theme];
@@ -984,10 +1027,20 @@ const initializeApp = async () => {
     });
 
     const boardData = JSON.parse(response.text);
+
+    // Defensive check to ensure boardData is a valid array
+    if (!Array.isArray(boardData)) {
+        console.error("API response is not an array:", boardData);
+        throw new Error("Invalid data structure from Gemini API.");
+    }
+    
     columns = boardData.map((col, index) => ({
       ...col,
       id: generateId(),
-      cards: col.cards.map(card => ({ ...card, id: generateId() })),
+      // Defensive check to ensure cards is an array, default to empty if not
+      cards: (col.cards && Array.isArray(col.cards)) 
+        ? col.cards.map(card => ({ ...card, id: generateId() })) 
+        : [],
       color: COLOR_PALETTE[index % COLOR_PALETTE.length],
     }));
     renderApp();

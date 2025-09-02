@@ -850,3 +850,98 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   padding: 10px 24px;
   font-size: 1rem;
 }
+
+/* --- Welcome Modal --- */
+.heart-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(5px);
+}
+
+.heart-modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  position: relative;
+}
+
+.heart-shape {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  background-color: #e53935;
+  transform: rotate(-45deg);
+  animation: beat 1.5s ease-in-out infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.heart-shape::before,
+.heart-shape::after {
+  content: '';
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background-color: #e53935;
+  border-radius: 50%;
+}
+
+.heart-shape::before {
+  top: -100px;
+  left: 0;
+}
+
+.heart-shape::after {
+  top: 0;
+  left: 100px;
+}
+
+.heart-modal-text {
+  color: white;
+  font-family: 'cursive', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 2.2rem;
+  font-weight: bold;
+  text-align: center;
+  transform: rotate(45deg);
+  z-index: 1;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+  padding: 20px;
+  line-height: 1.2;
+}
+
+.heart-modal-close-btn {
+  background-color: var(--card-bg);
+  color: #e53935;
+  border: 2px solid #e53935;
+  border-radius: var(--radius);
+  padding: 12px 24px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.heart-modal-close-btn:hover {
+  background-color: #e53935;
+  color: white;
+  transform: scale(1.05);
+}
+
+@keyframes beat {
+  0%, 100% {
+    transform: scale(1) rotate(-45deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(-45deg);
+  }
+}
